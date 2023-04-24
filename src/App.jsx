@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
-import "./App.css";
 import Tours from "./Tours";
+import Loading from "./Loading";
 
 const url = "https://course-api.com/react-tours-project";
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [tours, setTours] = useState([]);
+
+  const removeTour = (id) => {
+    const newTours = tours.filter((tour) => tour.id !== id);
+    setTours(newTours);
+  };
 
   const fetchTours = async () => {
     setIsLoading(true);
@@ -14,7 +19,7 @@ function App() {
       const tours = await response.json();
       setIsLoading(false);
       setTours(tours);
-      console.log(tours);
+      // console.log(tours);
     } catch (error) {
       setIsLoading(false);
       console.log(error);
@@ -28,14 +33,14 @@ function App() {
   if (isLoading) {
     return (
       <main>
-        <h1>Loading...</h1>
+        <Loading />
       </main>
     );
   }
   return (
-    <>
-      <Tours />
-    </>
+    <main>
+      <Tours tours={tours} removeTour={removeTour} />
+    </main>
   );
 }
 
